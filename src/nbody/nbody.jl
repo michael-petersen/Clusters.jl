@@ -5,7 +5,7 @@ using Statistics     # access to mean
 
 function return_density_centre(filename::String)
     # read a simple centering file
-    allpos = readdlm(filename, Float32,skipstart=1)
+    allpos = readdlm(filename, Float32,skipstart=0)
     
     x  = allpos[:,1]
     y  = allpos[:,2]
@@ -79,6 +79,34 @@ function perturbation_density(xvals::Vector{Float32},
     
     return a1,a2,a3
     
+end
+
+
+
+        
+function discrete_fourier_k(xmean::Vector{Float32},k::Int)
+
+    # 
+    # function to compute the discrete fourier transform of the density centre run with time for a coordinate,
+    #   here called 'x'.
+    # this is equation (4) of Heggie+ (2020)
+    #
+    
+    # initialise the sum
+    sum = 0
+    
+    # how many numbers in the array?
+    tmax = length(xmean)
+    
+    # loop through the times
+    for t=1:tmax
+        sum += xmean[t] * exp(-2*1im*pi*t*k/tmax)
+    end
+    
+    # normalise and return
+    return sum/tmax
+
+    # this will be complex, so need to treat appropriately!    
 end
 
 
