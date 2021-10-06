@@ -17,7 +17,7 @@ clusters, from analytical descriptions to _n_-body simulations.
 
 ## Author
 
-Kristoffer Carlsson -  @KristofferC - kristoffer.carlsson@chalmers.se
+Mike Petersen -  @michael-petersen - petersen@iap.fr
 
 
 
