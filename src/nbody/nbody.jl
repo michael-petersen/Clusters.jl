@@ -34,6 +34,9 @@ end
 function find_rbary(x::Vector{Float32},y::Vector{Float32},z::Vector{Float32},vx::Vector{Float32},vy::Vector{Float32},vz::Vector{Float32})
 
     # function to compute the barycentric radius of particles
+    # this could use functionality to also take a centre, not just
+    # compute the mean (or use the Julia ability to have
+    # multiply-defined names?)
 
     # these are the barycentre values
     xmean  = mean(x)
@@ -50,7 +53,28 @@ function find_rbary(x::Vector{Float32},y::Vector{Float32},z::Vector{Float32},vx:
     return rbary
 end
 
+function crosscorrelation(x::Vector{Float32},y::Vector{Float32})
+    # y should be optional, to default to autocorrelation?
+    #
+    # compute the crosscorrelation. will compute for all possible
+    # differences in time, but may want to make this an option later.
 
+    nsamples = length(x)
+
+    # this needs to be a vector.
+    corr = 0.0
+
+    for t=1:nsamples
+      draws = 0
+      for i=1:nsamples
+        if i+t > nsamples
+	  continue
+	end
+	draws++
+        corr[t] += x[i] * y[i+t]
+      end
+      corr[t] /= draws
+    end
 
 
 
