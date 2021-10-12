@@ -31,7 +31,7 @@ function return_particles(filename::String)
 end
 
 
-function find_rbary(x::Vector{Float32},y::Vector{Float32},z::Vector{Float32},vx::Vector{Float32},vy::Vector{Float32},vz::Vector{Float32})
+function find_rbary(x::Vector{Float32},y::Vector{Float32},z::Vector{Float32})
 
     # function to compute the barycentric radius of particles
     # this could use functionality to also take a centre, not just
@@ -42,9 +42,6 @@ function find_rbary(x::Vector{Float32},y::Vector{Float32},z::Vector{Float32},vx:
     xmean  = mean(x)
     ymean  = mean(y)
     zmean  = mean(z)
-    vxmean = mean(vx)
-    vymean = mean(vy)
-    vzmean = mean(vz)
 
     # rbary = barycentre radius
     rbary = ((x.-xmean).^2 + (y.-ymean).^2 + (z.-zmean).^2).^0.5
@@ -61,20 +58,31 @@ function crosscorrelation(x::Vector{Float32},y::Vector{Float32})
 
     nsamples = length(x)
 
-    # this needs to be a vector.
-    corr = 0.0
+    # initialise a vector
+    corr = Vector{Float32}(undef,nsamples)
 
     for t=1:nsamples
-      draws = 0
-      for i=1:nsamples
-        if i+t > nsamples
-	  continue
-	end
-	draws++
-        corr[t] += x[i] * y[i+t]
-      end
-      corr[t] /= draws
+        corr[t] = 0.
+        n = 0
+        for dt=1:nsamples
+            # if greater than the max number of samples, move on
+            if t+dt > nsamples
+                #print(t," ",dt,"\n")
+                continue
+            end
+        
+            n+=1
+            corr[t] += x[dt] * y[t+dt]
+        end
+
+        # average by the number of valid samples
+        print("number of samples:",n,"\n")
+        corr[t] /= (n+1.e-60)
     end
+    return corr
+
+end
+
 
 
 
@@ -126,12 +134,62 @@ function discrete_fourier_k(xmean::Vector{Float32},k::Int)
     for t=1:tmax
         sum += xmean[t] * exp(-2*1im*pi*t*k/tmax)
     end
-    
-    # normalise and return
-    return sum/tmax
 
-    # this will be complex, so need to treat appropriately!    
+    # this will be complex, so need to treat appropriately!
+    # e.g. we are interested in the real part of the frequency only
+    # normalise and return
+    return real(sum/tmax)
+
+       
 end
 
 
+
+##################################################################################
+##################################################################################
+# escaper analysis block
+##################################################################################
+##################################################################################
+
+function plummer_potential(r::Float32,a::Float32=1.0)
+    # using G=M=1
+    return  -1/sqrt(a*a + r*r)
+end
+
+function plummer_potential(r::Vector{Float64},a::Float64=1.0)
+    # using G=M=1
+    # vectorised.
+    return  -1 ./ sqrt.(a^2 .+ (r).^2)
+end
+
+function escaper_energy(x::Vector{Float32} ,y::Vector{Float32} ,z::Vector{Float32},
+                        vx::Vector{Float32},vy::Vector{Float32},vz::Vector{Float32})
+    # assumes positions have already been corrected to the desired frame!
+    r  = ( (x).^2 +  (y).^2 +  (z).^2).^0.5
+    v2 = ((vx).^2 + (vy).^2 + (vz).^2)
+    
+    pot = plummer_potential(r)
+    
+    energy = 0.5*v2 + pot
+    
+    return energy
+end
+
+
+
+
+function spherical_coordinates(x::Vector{Float32} ,y::Vector{Float32} ,z::Vector{Float32},
+                               vx::Vector{Float32},vy::Vector{Float32},vz::Vector{Float32})
+    # assumes positions have already been corrected to the desired frame!
+    r  = ( (x).^2 +  (y).^2 +  (z).^2).^0.5
+    r2 = ( (x).^2 +  (y).^2).^0.5
+    th = atan.(r2 ./ z)
+    ph = atan.(y,x)
+        
+    vr = (x.*vx + y.*vy + z.*vz) ./ r
+    vt = ((x.*vx + y.*vy).*z .- r2.*r2.*vz) ./ (r.*r2)
+    vp = (y.*vx + x.*vy) ./ (r2)
+    
+    return r,th,ph,vr,vt,vp
+end
 
