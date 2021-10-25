@@ -6,6 +6,12 @@ clusters, from analytical descriptions to _n_-body simulations.
 
 -----------------------------
 
+## Quick activate
+
+In the main directory where you the package lives, enter the Julia environment (`julia`), then the package manager (`]`), then activate (`activate .`), then return to the Julia interpreter (`[backspace]`), then you are good to go with the latest version of the package!
+
+-----------------------------
+
 ## Analysing _n_-body runs
 #### reader abilities
 
@@ -20,9 +26,10 @@ clusters, from analytical descriptions to _n_-body simulations.
 `find_rbary(x,y,z)` computes the barycentre and returns the radius for a given x,y,z series
 `find_rbary(x,y,z,xc,yc,zc)` offsets series by xc,yc,zc and returns the radius for a given x,y,z series
 
-`crosscorrelation(x,y)` computes the cross correlation of two density centre series à la Heggie.
 
 #### power spectra computation
+
+`crosscorrelation(x,y)` computes the cross correlation of two density centre series à la Heggie.
 
 `perturbation_density(x,y,z,rmax,m=1)` computes eq. 3 of Heggie (2020)
 
@@ -42,6 +49,11 @@ clusters, from analytical descriptions to _n_-body simulations.
 
 
 ## Basis element support
+
+`potential_function(r,l,n,bc)` return the Clutton-Brock potential basis element at (l,n)
+
+`density_function(r,l,n,bc)` return the Clutton-Brock density basis element at (l,n)
+
 
 
 ## Author

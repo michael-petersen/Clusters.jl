@@ -3,6 +3,13 @@
 using DelimitedFiles # ability to read the tab-delimited text files
 using Statistics     # access to mean
 
+
+##################################################################################
+##################################################################################
+# reader ability block
+##################################################################################
+##################################################################################
+
 function return_density_centre(filename::String)
     # read a simple centering file
     allpos = readdlm(filename, Float32,skipstart=0)
@@ -13,8 +20,6 @@ function return_density_centre(filename::String)
 
     return x,y,z
 end
-
-
 
 function return_particles(filename::String)
     # function to read in ascii versions of nbody outputs (x y z vx vy vz)
@@ -30,6 +35,11 @@ function return_particles(filename::String)
     return x,y,z,vx,vy,vz
 end
 
+##################################################################################
+##################################################################################
+# centering support block
+##################################################################################
+##################################################################################
 
 function find_rbary(x::Vector{Float32},y::Vector{Float32},z::Vector{Float32})
 
@@ -49,6 +59,12 @@ function find_rbary(x::Vector{Float32},y::Vector{Float32},z::Vector{Float32})
     # sort these to look at the largest particle?
     return rbary
 end
+
+##################################################################################
+##################################################################################
+# power spectra computation block
+##################################################################################
+##################################################################################
 
 function crosscorrelation(x::Vector{Float32},y::Vector{Float32})
     # y should be optional, to default to autocorrelation?
@@ -83,9 +99,6 @@ function crosscorrelation(x::Vector{Float32},y::Vector{Float32})
 
 end
 
-
-
-
 function perturbation_density(xvals::Vector{Float32},
                               yvals::Vector{Float32},
                               zvals::Vector{Float32},
@@ -108,14 +121,12 @@ function perturbation_density(xvals::Vector{Float32},
     a1 = mass.*(3/volume)*sum(sin.(theta).*cos.(phi))
     a2 = mass.*(3/volume)*sum(sin.(theta).*sin.(phi))
     a3 = mass.*(3/volume)*sum(cos.(theta))
+
     
     return a1,a2,a3
     
 end
 
-
-
-        
 function discrete_fourier_k(xmean::Vector{Float32},k::Int)
 
     # 
@@ -174,9 +185,6 @@ function escaper_energy(x::Vector{Float32} ,y::Vector{Float32} ,z::Vector{Float3
     
     return energy
 end
-
-
-
 
 function spherical_coordinates(x::Vector{Float32} ,y::Vector{Float32} ,z::Vector{Float32},
                                vx::Vector{Float32},vy::Vector{Float32},vz::Vector{Float32})
