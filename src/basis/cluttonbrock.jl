@@ -1,6 +1,6 @@
 
 using Statistics                  # access to mean
-using SphericalHarmonics # access to Spherical harmonics (but watch out for conventions!)
+#using SphericalHarmonics # access to Spherical harmonics (but watch out for conventions!)
 
 function mapping_r_xi(r::Float64,bc::Float64)
     # function to compute the reduced mapping
