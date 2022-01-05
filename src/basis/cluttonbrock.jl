@@ -1,3 +1,17 @@
+#=
+cluttonbrock.jl
+
+All the machinery needed to implement the spherical Clutton-Brock (1973) basis.
+
+Currently, only
+
+-potential_function
+-density_function
+-accumulate_ln
+
+are exported.
+
+=#
 
 using Statistics                  # access to mean
 #using SphericalHarmonics # access to Spherical harmonics (but watch out for conventions!)
@@ -45,7 +59,7 @@ function accumulate_ln(xvals,
     for a=1:length(r)
         C += potential_function(r[a],l,n,bc)
     end
-    
+
     return wln*C/length(r)
 end
 
@@ -85,5 +99,3 @@ function upward_gegenbauer(rho::Float64,alpha::Int64,nmax::Int64)
     end
     return C
 end
-
-

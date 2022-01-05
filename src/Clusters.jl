@@ -7,7 +7,7 @@ using Optim
 # and expose whatever we'd like to see externally.
 
 include("frequencies/frequencies.jl")
-export compute_frequencies_EK
+export compute_frequencies,compute_frequencies_EK
 
 include("basis/basis.jl")
 export potential_function,density_function,accumulate_ln

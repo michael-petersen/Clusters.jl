@@ -1,4 +1,12 @@
-# Find empirically-estimated frequencies given a potential and gradient.
+#=
+
+ Find empirically-estimated frequencies given a potential (and optional gradient).
+
+TODO
+-Put in boundary guards for the minimum and maximum energy: can only get so close to each.
+
+=#
+
 ##################################################
 using Optim # for zero-finding
 
@@ -50,8 +58,8 @@ end
 
 function potential(r::Float64)
     return isochrone_psi(r)
-end    
-    
+end
+
 function dpotential(r::Float64)
     return isochrone_dpsi_dr(r)
 end
@@ -113,55 +121,121 @@ function kepler_anomaly_frequencies(r_apo::Float64,r_peri::Float64,ee::Float64,j
     FRECS = 16
     # ,FRECS::Int32=16
     dt = pi/FRECS;
-    
+
     # define some auxilliaries
     ap = 0.5*(r_apo + r_peri);
     am = 0.5*(r_apo - r_peri);
     sp = ap/(r_apo*r_peri);
     sm = am/(r_apo*r_peri);
-    
+
     # set the accumulators to zero
     #accum0 = 0.0;
     accum1 = 0.0;
     accum2 = 0.0;
-    
+
     # proceed as centred rectangle integration
     t = 0.5*(dt-pi)
-  
+
     for i=1:FRECS
 
         r = ap + am*sin(t)
-      
+
         ur = potential(r)
         cost = cos(t)
-        
+
         tmp = sqrt(2.0*(ee-ur) - (jj*jj)/(r*r));
-        
+
         #accum0 += cost * tmp;
-      
+
         accum1 += cost / tmp;
-      
+
         s = sp + sm*sin(t);
-      
+
         ur = potential(1.0/s)
-      
+
         accum2 += cost/sqrt(2.0*(ee-ur) - (jj*jj*s*s));
-      
+
         # advance the counter
         t += dt
     end
 
-  
+
     freq1 = pi/(am*accum1*dt);
     freq2 = freq1 * jj * sm * accum2 * dt/pi;
-    
+
     # note that we could also compute the actions if we wanted:
     #action1 = am*accum0*dt/pi;
     #action2 = jj;
-    
+
     return freq1,freq2
-    
+
 end
+
+
+function henon_anomaly_frequencies(r_apo::Float64,r_peri::Float64,ee::Float64,jj::Float64)
+    # set the integration width
+    FRECS = 16
+    integration_distance = 2
+    du = integration_distance/FRECS;
+
+    # define some auxilliaries
+    ap  = 0.5*(r_apo + r_peri); # a
+    am  = 0.5*(r_apo - r_peri); # ae
+    ecc = (r_apo-r_peri)/(r_apo+r_peri)#am/ap
+    sp  = ap/(r_apo*r_peri);
+    sm  = am/(r_apo*r_peri);
+
+    # set the accumulators to zero
+    #accum0 = 0.0;
+    accum1 = 0.0;
+    accum2 = 0.0;
+
+    # proceed as centred rectangle integration: starting point
+    u = 0.5*(du-integration_distance)
+
+    for i=1:FRECS
+
+        #print(i,' ',t,'\n')
+
+        fu = u*(3/2 - u*u/2)
+        r  = ap*(1+ecc*fu)
+        #print(r," ")
+        dr = (3/4)*(r_apo-r_peri)*(1-(u^2))
+        #print(dr," ")
+
+        ur = potential(r)
+        #print(ur," ")
+
+        tmp = sqrt(2(ee-ur) - (jj*jj)/(r*r));
+        #print(tmp," ")
+        #accum0 += dr * tmp;
+
+        accum1 += dr / tmp;
+        #print(accum1,"\n")
+
+        s = r/(r_apo*r_peri);
+
+        ur = potential(1.0/s)
+
+        accum2 += dr/sqrt(2*(ee-ur) - (jj*jj*s*s));
+
+        # advance the counter
+        u += du
+    end
+
+
+    #freq1 = integration_distance/(accum1*dt);
+    freq1 = (pi/2)*FRECS/(accum1)
+    freq2 = freq1/(pi/2) * jj * (sm/am) * accum2 / FRECS;
+
+    # note that we could also compute the actions if we wanted:
+    #action1 = am*accum0*dt/pi;
+    #action2 = jj;
+
+    return freq1,freq2
+
+end
+
 
 
 ##################################################
@@ -169,35 +243,46 @@ end
 ##################################################
 
 function compute_frequencies(r_apo::Float64,r_peri::Float64,ee::Float64,jj::Float64)
-    
+
     freq1,freq2 = kepler_anomaly_frequencies(r_apo,r_peri,ee,jj)
-    
+
     return freq1,freq2
 end
-    
+
 function compute_frequencies(r_apo::Float64,r_peri::Float64)
-    
+
     # ee, jj are dangerous for circular orbits... may need the limited development here
     ee = (r_apo*r_apo*potential(r_apo) - r_peri*r_peri*potential(r_peri))/(r_apo^2 - r_peri^2)
     jj = sqrt(2*(potential(r_apo) - potential(r_peri))/(r_peri^(-2) - r_apo^(-2)))
     #print("ee/jj",ee," ",jj," ","\n")
-    
+
     freq1,freq2 = kepler_anomaly_frequencies(r_apo,r_peri,ee,jj)
-    
+
     return freq1,freq2
 end
 
 function compute_frequencies_EK(E::Float64,K::Float64)
     # put the computations together so we only need E,K
-    
+
     r_peri,r_apo,r_circ,J = make_orbit(E,K)
-    
+
     freq1,freq2 = kepler_anomaly_frequencies(r_apo,r_peri,E,J)
-    
+
     return freq1,freq2
 end
-    
+
+function compute_frequencies_henon(r_apo::Float64,r_peri::Float64)
+
+    # ee, jj are dangerous for circular orbits... may need the limited development here
+    ee = (r_apo*r_apo*potential(r_apo) - r_peri*r_peri*potential(r_peri))/(r_apo^2 - r_peri^2)
+    jj = sqrt(2*(potential(r_apo) - potential(r_peri))/(r_peri^(-2) - r_apo^(-2)))
+    #print("ee/jj",ee," ",jj," ","\n")
+
+    freq1,freq2 = henon_anomaly_frequencies(r_apo,r_peri,ee,jj)
+
+    return freq1,freq2
+end
+
 
 # https://stackoverflow.com/questions/46842510/how-to-pass-a-function-as-an-argument-for-another-function-in-julia
 # https://docs.julialang.org/en/v1/manual/performance-tips/
-
