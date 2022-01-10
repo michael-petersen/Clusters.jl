@@ -173,6 +173,8 @@ end
 
 
 function henon_anomaly_frequencies(r_apo::Float64,r_peri::Float64,ee::Float64,jj::Float64)
+    # perform an integration from -1 to 1 (u)
+    #
     # set the integration width
     FRECS = 16
     integration_distance = 2
@@ -195,23 +197,15 @@ function henon_anomaly_frequencies(r_apo::Float64,r_peri::Float64,ee::Float64,jj
 
     for i=1:FRECS
 
-        #print(i,' ',t,'\n')
-
         fu = u*(3/2 - u*u/2)
         r  = ap*(1+ecc*fu)
-        #print(r," ")
         dr = (3/4)*(r_apo-r_peri)*(1-(u^2))
-        #print(dr," ")
 
         ur = potential(r)
-        #print(ur," ")
 
         tmp = sqrt(2(ee-ur) - (jj*jj)/(r*r));
-        #print(tmp," ")
-        #accum0 += dr * tmp;
 
         accum1 += dr / tmp;
-        #print(accum1,"\n")
 
         s = r/(r_apo*r_peri);
 
@@ -222,7 +216,6 @@ function henon_anomaly_frequencies(r_apo::Float64,r_peri::Float64,ee::Float64,jj
         # advance the counter
         u += du
     end
-
 
     #freq1 = integration_distance/(accum1*dt);
     freq1 = (pi/2)*FRECS/(accum1)

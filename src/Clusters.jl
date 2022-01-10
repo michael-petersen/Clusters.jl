@@ -3,6 +3,9 @@ module Clusters
 # add any `using` statements here
 using Optim
 
+# define any global constants here
+const astronomicalG = 1
+
 # add libraries here,
 # and expose whatever we'd like to see externally.
 
