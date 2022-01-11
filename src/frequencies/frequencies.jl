@@ -10,41 +10,6 @@ TODO
 ##################################################
 using Optim # for zero-finding
 
-##################################################
-# some basic potential options
-##################################################
-function isochrone_psi(r::Float64)
-    M = 1.
-    G = 1.
-    bc= 1.
-    rbc = r^2 + bc^2
-    return -G*M*(bc+sqrt(rbc))^(-1)
-end
-
-function isochrone_dpsi_dr(r::Float64)
-    M = 1.
-    G = 1.
-    bc= 1.
-    rbc = r^2 + bc^2
-    return G*M*r*(sqrt(rbc)*(sqrt(rbc)+bc)^2)^(-1)
-end
-
-function plummer_psi(r::Float64)
-    M = 1.
-    G = 1.
-    bc= 1.
-    rbc = r^2 + bc^2
-    return -G*M*(sqrt(rbc))^(-1)
-end
-
-function plummer_dpsi_dr(r::Float64)
-    M = 1.
-    G = 1.
-    bc= 1.
-    rbc = r^2 + bc^2
-    return G*M*r*((rbc)^(-3/2))
-end
-
 
 
 ##################################################
@@ -234,6 +199,7 @@ end
 ##################################################
 # the wrappers for interfacing and getting frequencies
 ##################################################
+
 
 function compute_frequencies(r_apo::Float64,r_peri::Float64,ee::Float64,jj::Float64)
 
