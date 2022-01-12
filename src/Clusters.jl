@@ -10,7 +10,7 @@ const astronomicalG = 1
 # and expose whatever we'd like to see externally.
 
 # basic libraries for functions
-#include("utils/coordinates.jl")
+include("utils/coordinates.jl")
 
 # functions for numerical computation of frequencies
 include("frequencies/frequencies.jl")
@@ -26,7 +26,7 @@ export return_particles,return_density_centre,find_rbary,perturbation_density,di
 
 # the isochrone model
 include("models/isochrone.jl")
-export isochrone_psi
+export isochrone_psi,isochrone_Omega_1_2_ae
 
 # the plummer model
 include("models/plummer.jl")

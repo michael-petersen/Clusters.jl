@@ -1,7 +1,7 @@
 name           = "Clusters"
 uuid           = "e544afea-a953-4249-8b17-9a4950a510ad"
 authors        = ["Mike Petersen <petersen@iap.fr>"]
-version        = "0.1.0"
+version        = "0.1.1"
 
 [deps]
 DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
