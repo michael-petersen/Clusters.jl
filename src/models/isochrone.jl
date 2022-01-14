@@ -1,6 +1,8 @@
 #=
 definitions for the isochrone potential for checking empirical frequencies and other determined properties
 
+todo
+-the Jacobian can definitely be improved
 
 =#
 
@@ -84,4 +86,16 @@ function isochrone_L_from_rpra(rp::Float64,ra::Float64,bc::Float64=1.)
     L0 = isochrone_L0()
     sp,sa = spsa_from_rpra(rp,ra)
     return sqrt(2)*L0*xp*xa/sqrt((1+sp)*(1+sa)*(sp+sa))
+end
+
+function isochrone_dthetadu_from_rpra(r::Float64,u::Float64,rp::Float64,ra::Float64,bc::Float64=1.)
+    # the isochrone analytic Jacobian, Fouvry 21 G10
+    xp = rp/bc
+    xa = ra/bc
+    xr = r/bc
+    sr = sqrt(1+xr^(2))
+    Omega0 = isochrone_Omega0()
+    Omega1,Omega2 = isochrone_Omega_1_2(rp,ra)
+    sp,sa = spsa_from_rpra(rp,ra)
+    return (3/sqrt(2))*(Omega1/Omega0)*(xr/sqrt(4-u^(2)))*(sqrt((sr+sp)*(sr+sa)*(sp+sa))/sqrt((xr+xp)*(xr+xa)))
 end
