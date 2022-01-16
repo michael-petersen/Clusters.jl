@@ -18,8 +18,6 @@ In the main directory where you the package lives, enter the Julia environment (
 `return_particles(filename)` reads in a delimited file to x,y,z,vx,vy,vz
 `return_density_centre(filename)` reads in a centre file
 
-
-
 #### centring support
 
 `find_rbary(x,y,z)` computes the barycentre and returns the radius for a given x,y,z series
@@ -29,6 +27,7 @@ In the main directory where you the package lives, enter the Julia environment (
 #### power spectra computation
 
 `crosscorrelation(x,y)` computes the cross correlation of two density centre series à la Heggie.
+
 `perturbation_density(x,y,z,rmax,m=1)` computes eq. 3 of Heggie (2020)
 `discrete_fourier_k(x,k)` computes eq. 4 of Heggie (2020)
 
@@ -40,7 +39,7 @@ In the main directory where you the package lives, enter the Julia environment (
 
 ## Computing numerical frequencies
 
-`compute_frequencies_EK(E,K)` return frequencies Ω₁ and Ω₂ for a given E,K (and predefined potential function)
+`compute_frequencies_EK(E,K)` return frequencies Ω₁ and Ω₂ for a given E,κ (and predefined potential function)
 
 
 ## Basis element support
@@ -48,11 +47,17 @@ In the main directory where you the package lives, enter the Julia environment (
 `potential_function(r,l,n,bc)` return the Clutton-Brock potential basis element at (l,n)
 `density_function(r,l,n,bc)` return the Clutton-Brock density basis element at (l,n)
 
+## Specific models
 
+#### Isochrone
+`isochrone_psi(r,M=1,bc=1)` return the isochrone potential
+`isochrone_Omega_1_2_ae(a,ecc,bc=1)` return the analytic isochrone frequencies Ω₁ and Ω₂ as a function of a and ecc.
+
+#### Plummer
+`plummer_psi(r,M,bc=1)` return the plummer potential
+
+-----------------------------
 
 ## Author
 
 Mike Petersen -  @michael-petersen - petersen@iap.fr
-
-
-
