@@ -22,6 +22,12 @@ function extremise_function(func::Function,neps::Int64=32)
     Requires exactly 2*neps evaluations of the function
 
     =#
+    if neps > 53
+        # can't be for double precision
+        neps = 53
+        print("extremise_function- reached maximum precision.\n")
+    end
+    
     deps = 1/2^(neps)
 
     # check the endpoint derivatives
