@@ -32,4 +32,8 @@ export isochrone_psi,isochrone_Omega_1_2_ae
 include("models/plummer.jl")
 export plummer_psi
 
+# some utilities
+include("utils/potentials.jl")
+export dpotential_numerical,extremise_function
+
 end # module
