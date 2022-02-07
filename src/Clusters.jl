@@ -1,7 +1,9 @@
 module Clusters
 
 # add any `using` statements here
-using Optim
+using Optim           # for zero-finding I
+using Roots           # for zero finder II
+using Interpolations  # for basic interpolation
 
 # define any global constants here
 const astronomicalG = 1
@@ -11,10 +13,18 @@ const astronomicalG = 1
 
 # basic libraries for functions
 include("utils/coordinates.jl")
+include("utils/conserved.jl")
+export E_from_rpra_pot,L_from_rpra_pot
 
 # functions for numerical computation of frequencies
+# first for circular orbits
+include("frequencies/epicycle.jl")
+# no exports needed? can do beta_c for fun visualisations
+export make_betac
+
+# then for more generic orbits
 include("frequencies/frequencies.jl")
-export compute_frequencies,compute_frequencies_EK
+export compute_frequencies_henon_ae
 
 # functions to return basis elements
 include("basis/basis.jl")
@@ -26,7 +36,7 @@ export return_particles,return_density_centre,find_rbary,perturbation_density,di
 
 # the isochrone model
 include("models/isochrone.jl")
-export isochrone_psi,isochrone_Omega_1_2_ae
+export isochrone_psi,isochrone_dpsi_dr,isochrone_ddpsi_ddr
 
 # the plummer model
 include("models/plummer.jl")

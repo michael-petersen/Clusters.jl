@@ -5,13 +5,14 @@ algorithm to extremise a function by bisection
 todo
 -return a flag for whether a maximum or minimum?
 
-=#
+MSP 07 Feb 2022 minor upgrade for the last half step
 
+=#
 
 
 function extremise_function(func::Function,neps::Int64=32,minval::Float64=0.,maxval::Float64=1.,verbose::Bool=false)
     #=
-    Find the single extremum of a function between 0 and 1
+    Find the single extremum of a function between minval and maxval
 
     Accuracy will be set by deps, 1/2^neps:
       can never do better than evaluating the function on a grid this fine.
@@ -44,6 +45,9 @@ function extremise_function(func::Function,neps::Int64=32,minval::Float64=0.,max
     right_derivative = right_end_derivative
     leftmin = 0.
     rightmax = width
+
+    # set flag for final precision step counter
+    rflag = false
 
     for iter=1:neps
         # assign a new midpoint
@@ -97,6 +101,9 @@ function extremise_function(func::Function,neps::Int64=32,minval::Float64=0.,max
             leftmin = midpoint
 
             left_derivative = mid_right_derivative
+            if (iter == neps)
+                rflag = true
+            end
         end
 
         # watch the convergence fly by...
@@ -109,7 +116,20 @@ function extremise_function(func::Function,neps::Int64=32,minval::Float64=0.,max
         # otherwise, return the value at the maximum number of iterations
         # (with an advancement to the next midpoint)
         if iter == neps
-            return midpoint + 1/(2^(neps+1))
+
+            #check to make sure we aren't at the boundaries
+            #print(midpoint,' ',maxval-deps,'\n')
+            if (midpoint>=(maxval-deps)) | (midpoint<=(minval+deps))
+                return -1
+            end
+
+            # take one last midpoint based on which side the derivative is on
+            if rflag
+                return midpoint + 1/(2^(neps+1))
+            else
+                return midpoint - 1/(2^(neps+1))
+            end
+
         end
     end
 end
