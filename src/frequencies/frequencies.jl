@@ -190,8 +190,9 @@ function compute_frequencies_henon(potential::Function,dpotential::Function,ddpo
     return freq1,freq2
 end
 
+
 function compute_frequencies_henon_ae(potential::Function,dpotential::Function,ddpotential::Function,
-                                      a::Float64,ecc::Float64,TOLECC::Float64=0.01)
+                                      a::Float64,ecc::Float64,TOLECC::Float64=0.01,verbose::Int64=0)
 
     # if too radial, don't let J go to zero
     if (1-ecc)<0.01*TOLECC
@@ -204,8 +205,9 @@ function compute_frequencies_henon_ae(potential::Function,dpotential::Function,d
     E = E_from_rpra_pot(potential,dpotential,ddpotential,r_peri,r_apo)
     J = L_from_rpra_pot(potential,dpotential,ddpotential,r_peri,r_apo)
 
-    print("E/J ",E," ",J,"\n")
-
+    if verbose>0
+        print("E/J ",E," ",J,"\n")
+    end
 
     # don't go into the loop if circular
     if ecc<TOLECC

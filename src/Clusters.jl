@@ -15,12 +15,14 @@ const astronomicalG = 1
 include("utils/coordinates.jl")
 include("utils/conserved.jl")
 export E_from_rpra_pot,L_from_rpra_pot
+include("utils/bisect.jl")
+export extremise_function
 
 # functions for numerical computation of frequencies
 # first for circular orbits
 include("frequencies/epicycle.jl")
 # no exports needed? can do beta_c for fun visualisations
-export make_betac
+export Omega1_circular,Omega2_circular
 
 # then for more generic orbits
 include("frequencies/frequencies.jl")
