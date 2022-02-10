@@ -109,5 +109,38 @@ end
 
 
 function isochrone_beta_c(alpha::Float64)
+    #=
+    circular velocity frequency
+    =#
     return 1/(1+alpha^(2/3))
+end
+
+
+
+function fanomaly(s::Float64)
+    #=
+    the Henon anomaly
+    =#
+    s*(1.5 - 0.5*s^(2))
+end
+
+function dfdu(s::Float64)
+    #=
+    derivative of Henon anomaly, df/ds(s)
+
+    =#
+    1.5*(1.0 - s^(2))
+end
+
+#what is this supposed to look like for isochrone
+function isochrone_drdsINVvrfromrpra(rp::Float64,ra::Float64,s::Float64)
+    bISO = 1.
+    Omega0 = 1.
+    Sigma, Delta = (ra+rp)*0.5, (ra-rp)*0.5 # Used for the mapping from u
+    r = Sigma + Delta*fanomaly(s) # Current value of the radius
+    xp, xa, xr = rp/bISO, ra/bISO, r/bISO # Rescaled pericentre, apocentre, and radius
+    sqxp, sqxa, sqxr = sqrt(1.0+xp^(2)), sqrt(1.0+xa^(2)), sqrt(1.0+xr^(2)) # Pre-computing the values of sqrt(1+xp^2), sqrt(1+xa^2), and sqrt(1+xr^(2))
+    #####
+    drduINVvr = (3.0/(sqrt(2.0)))/(Omega0)*xr*sqrt(((sqxr+sqxp)*(sqxr+sqxa)*(sqxp+sqxa))/((xr+xp)*(xr+xa)*(4.0-s^(2))))# Analytical expression of (dr/du)(1/vr), that is always well-posed
+    return drduINVvr # Output
 end

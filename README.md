@@ -14,7 +14,7 @@ In the main directory where you the package lives, enter the Julia environment (
 
 ## Computing numerical frequencies
 
-`compute_frequencies_henon_ae(φ(r),dφ/dr,d²φ/dr²,a,e)` return frequencies Ω₁ and Ω₂ for a given a,e (semi-major axis and eccentricity) using Henon anomaly
+`compute_frequencies_henon_ae(φ,dφ/dr,d²φ/dr²,a,e)` return frequencies Ω₁ and Ω₂ for a given a,e (semi-major axis and eccentricity) + potential model using Henon anomaly. Will fall back to epicycle approximation when too close to circular.
 
 
 ## Basis element support
