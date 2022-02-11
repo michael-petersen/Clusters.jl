@@ -16,7 +16,8 @@ const tabPrefCB73_Dlnp = zeros(Float64,lmax+1,nradial) # Table of the prefactors
 #####
 const lmaxCB73 = 50 # Maximum ell for the pre-computed prefactors
 const nmaxCB73 = 200 # Maximum np  for the pre-computed prefactors
-const namefileCB73 = "src/basis/data_Basis/data_CB73_lmax_"*string(lmaxCB73)*"_nmax_"*string(nmaxCB73)*".h5" # Name of the file where the prefactors were dumped
+filename = "data_Basis/data_CB73_lmax_"*string(lmaxCB73)*"_nmax_"*string(nmaxCB73)*".h5" # Name of the file where the prefactors were dumped
+const namefileCB73 = joinpath(@__DIR__, filename)
 const tabalphaCB73 = h5read(namefileCB73,"tab_alphalnp") # Reading the prefactors alpha_lnp
 const tabbetaCB73  = h5read(namefileCB73,"tab_betalnp")  # Reading the prefactors beta_lnp
 ##################################################
