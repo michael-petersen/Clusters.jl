@@ -8,7 +8,7 @@ clusters, from analytical descriptions to _n_-body simulations.
 
 ## Quick activate
 
-In the main directory where you the package lives, enter the Julia environment (`julia`), then the package manager (`]`), then activate (`activate .`), then return to the Julia interpreter (`[backspace]`), then you are good to go with the latest version of the package! Import by typing `using Clusters` into the Julia interpreter.
+In the main directory where you the package lives, enter the Julia environment (`julia`), then the package manager (`]`), then activate (`activate .`). To be extra safe, you can `resolve` to check for updates. Then return to the Julia interpreter (`[backspace]`): you are good to go with the latest version of the package! Import by typing `using Clusters` into the Julia interpreter.
 
 -----------------------------
 
