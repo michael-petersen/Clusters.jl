@@ -15,3 +15,6 @@ end
 tabuwGLquad!()
 
 plot(tabuGLquad,tabwGLquad)
+
+savefig("figures/gausstest.png")
+# savefig(plot_ref, fn) # save the fig referenced by plot_ref as fn
