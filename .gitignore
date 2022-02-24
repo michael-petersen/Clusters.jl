@@ -2,4 +2,3 @@
 .DS_Store
 examples/get_files.sh
 examples/run_on_infinity.jl
-docs/build/
